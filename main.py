@@ -5,12 +5,12 @@ g, y, r, w = Color.GREEN, Color.YELLOW, Color.RED, Color.WHITE # Terminal color 
 
 def main():
     while True:
-        user_input = input(f'{b}{w}>> Type {b}"Window"{e}{w} or {b}"Terminal"{e}{w} for the respective mode...\n  {u}>{e} ')
+        user_input = input(f'{w}>> Type {b}"Window"{e}{w} or {b}"Terminal"{e}{w} for the respective mode...\n  {u}>{e} ')
         if user_input.lower() in ['window', 'win']:
-            print(f'>> Entering... {i}Window Mode{e}.')
+            print(f'{w}>> Entering... {i}Window Mode{e}{w}.{e}')
             return 'window'
         elif user_input.lower() in ['terminal', 'term']:
-            print(f'>> Entering... {i}Terminal Mode{e}.')
+            print(f'{w}>> Entering... {i}Terminal Mode{e}{w}.{e}')
             return 'terminal'
         else:
             error_handler.error_catcher(0)
