@@ -6,18 +6,17 @@ g, y, r, w = Color.GREEN, Color.YELLOW, Color.RED, Color.WHITE # Terminal color 
 
 def main():
     while True:
-        user_input = input(f'{w}{b}>> Type "Window"{e}{w} or {b}"Terminal"{e}{w} for the respective mode...\n  {u}>{e} ')
-        if user_input.lower() in ['window', 'win']:
+        userInput = input(f'{w}{b}>> Type "Window"{e}{w} or {b}"Terminal"{e}{w} for the respective mode...\n  {u}>{e} ')
+        if userInput.lower() in ['window', 'win']:
             print(f'{w}{b}>> Entering... {i}Window Mode{e}{w}.{e}')
             gui.gui()
             return
-        elif user_input.lower() in ['terminal', 'term']:
+        elif userInput.lower() in ['terminal', 'term']:
             print(f'{w}{b}>> Entering... {i}Terminal Mode{e}{w}.{e}')
             directory = locate_directory() # Looks for 'default' dir location.
-            credentials_array, directory_len = refresh_files(directory)
-            display_files(directory, credentials_array, directory_len)
-            terminal.terminal()
-            print(credentials_array)
+            credentialsArray, directoryLen = refresh_files(directory)
+            display_files(directory)
+            terminal.terminal(directory)
         else:
             error_handler.error_catcher(0)
 
