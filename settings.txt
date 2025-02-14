@@ -1,0 +1,2 @@
+Credentials Directory: C:\\Users\\Modesto\\Documents\\PyCharm Projects\\KeyKrypt\\credentials
+Auto-Copy: ON
