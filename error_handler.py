@@ -3,13 +3,20 @@
 from utilities import Color
 b, i, u, e = Color.BOLD, Color.ITALIC, Color.UNDERLINE, Color.END # Terminal text format.
 g, y, r, w = Color.GREEN, Color.YELLOW, Color.RED, Color.WHITE # Terminal color format.
+
 def error_catcher(x, *args):
     """Function "error_catcher()" catches potential errors that could occur and returns safely."""
     match x:
         case 0: # General input is invalid.
-            print(f'{b}{r}>> ERROR: {e}{i}{r}Not a valid input!{e}')
+            print(f'{b}{r}>> ERROR: {e}{i}{r}Not a valid command!{e}')
             return
         case 1: # General file was not found.
             print(f'{b}{r}>> ERROR: {e}{i}{r}File {args} was not found!{e}')
-        case 2:
-            print()
+            return
+        case 2: # Generic not a full valid command, too little args.
+            print(f'{b}{r}>> ERROR: {e}{i}{r}Not a full command, too little arguments.{e}'
+                  f'{r}\n     ↪ Type "-help" for commands!{e}')
+            return
+        case 3: # Generic not a full valid command, too many args.
+            print(f'{b}{r}>> ERROR: {e}{i}{r}Not a valid command, too many arguments.{e}'
+                  f'{r}\n     ↪ Type "-help" for commands!{e}')

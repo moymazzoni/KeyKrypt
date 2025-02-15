@@ -1,4 +1,4 @@
-from file_operations import locate_directory, refresh_files, display_files
+from file_operations import locate_directory, refresh_files, display_files, read_files
 from utilities import Color
 import error_handler, terminal, gui
 b, i, u, e = Color.BOLD, Color.ITALIC, Color.UNDERLINE, Color.END # Terminal text format.
@@ -15,7 +15,7 @@ def main():
             print(f'{w}{b}>> Entering... {i}Terminal Mode{e}{w}.{e}')
             directory = locate_directory() # Looks for 'default' dir location.
             credentialsArray, directoryLen = refresh_files(directory)
-            display_files(directory)
+            display_files(directory) # Lists file options.
             terminal.terminal(directory)
         else:
             error_handler.error_catcher(0)

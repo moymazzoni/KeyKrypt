@@ -44,4 +44,4 @@ def read_files(userInputFileName, directory):
                 print(f'\n{w}{b}{u}{userInputFileName}{e}\n{f.read()}') # Prints file name on top and file content(s).
                 return # Leaves the loop if condition is met (on top).
         continue
-    error_handler.error_catcher(1, userInputFileName) # If file is not found.
+    raise FileNotFoundError # If no file is found.
