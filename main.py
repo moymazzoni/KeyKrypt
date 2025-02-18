@@ -1,8 +1,7 @@
-from file_operations import locate_directory, refresh_files, display_files, read_files
-from utilities import Color
+"""MODULE main.py handles general operations, start and ending."""
+from file_operations import locate_directory, refresh_files, display_files
 import error_handler, terminal, gui
-b, i, u, e = Color.BOLD, Color.ITALIC, Color.UNDERLINE, Color.END # Terminal text format.
-g, y, r, w = Color.GREEN, Color.YELLOW, Color.RED, Color.WHITE # Terminal color format.
+from utilities import *
 
 def main():
     while True:
@@ -14,9 +13,10 @@ def main():
         elif userInput.lower() in ['terminal', 'term']:
             print(f'{y}{b}>> Entering... {i}Terminal Mode{e}{y}.{e}')
             directory = locate_directory() # Looks for 'default' dir location.
-            credentialsArray, directoryLen = refresh_files(directory)
-            display_files(directory) # Lists file options.
+            refresh_files(directory)
+            display_files(directory) # Lists file options before entering terminal.
             terminal.terminal(directory)
+            return
         else:
             error_handler.error_catcher(0)
 

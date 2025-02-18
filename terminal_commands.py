@@ -1,9 +1,8 @@
+"""MODULE terminal_commands.py contains all the commands that ties back to file_operations.py or its own functions."""
 import error_handler
-from file_operations import display_files, read_files
-from utilities import Color
-b, i, u, e = Color.BOLD, Color.ITALIC, Color.UNDERLINE, Color.END # Terminal text format.
-g, y, r, w = Color.GREEN, Color.YELLOW, Color.RED, Color.WHITE # Terminal color format.
-
+from file_operations import display_files, read_files, scan_function
+from utilities import *
+"""CLASS GlobalCommands contains all commands in a dictionary and the functions for correlating command."""
 class GlobalCommands: # Hosts all commands.
     def __init__(self):
         self.commands = {
@@ -18,16 +17,18 @@ class GlobalCommands: # Hosts all commands.
             '-read': self.read_command,
             '-r': self.read_command
         }
+
+    """FUNCTION process_command() is where the userInput goes in and gets sent to the appropriate function."""
     def process_command(self, userInput, directory):
-        userInput = userInput.split(' ') # Considers anything with a space as another arg.
-        print(userInput)
+        userInput = list(filter(None, userInput.split(' ')))  # Chops up the text so only words are passed as args.
         try:
             action = self.commands.get(userInput[0], lambda: error_handler.error_catcher(2))
-            if len(userInput) > 1 and '.txt' not in userInput[1]: # If file name doesn't have ".txt" at the end, add it for search.
-                userInput[1] += '.txt'
-            action(userInput, directory)
-        except (TypeError, IndexError): # Catches empty inputs or invalid ones (not a command).
+            isExit = action(userInput, directory) # Track result of correlating command.
+            if isExit is True:  # If exit command was input, exit.
+                return True
+        except (TypeError, IndexError):  # Catches empty inputs or invalid ones
             error_handler.error_catcher(0)
+        return False
 
     @staticmethod
     def list_command(userInput, directory):
@@ -60,11 +61,10 @@ class GlobalCommands: # Hosts all commands.
     def exit_command(userInput, _):
         if len(userInput) > 1:
             return error_handler.error_catcher(3)
-        return print('Hi from exit_command!')
+        return True
 
     @staticmethod
     def read_command(userInput, directory):
-        print(len(userInput))
         if len(userInput) >= 3:
             return error_handler.error_catcher(3)
         try:
@@ -76,4 +76,11 @@ class GlobalCommands: # Hosts all commands.
 
     @staticmethod
     def copy_command(userInput, directory):
-        print()
+        test_file = 'C:\\Users\\Modesto\\Downloads\\KeyKrypt - v2.0\\Credentials\\OW_test.txt'
+        try:
+            # cmd_2, app_name, user_pass_or_app = locate_data()
+            scan_function(userInput, test_file, directory)
+        except IndexError:
+            print(f'{Color.RED}{Color.BOLD}>> ERROR: {Color.END}{Color.RED}Command isn\'t valid, no passed arguments.'
+                  f'\n     ↪ Type "-help" for commands!{Color.END}')
+            return

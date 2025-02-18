@@ -1,9 +1,9 @@
 """MODULE file_operations.py keeps all file operations in safe, working order."""
 import os
-import error_handler
-from utilities import Color
-b, i, u, e = Color.BOLD, Color.ITALIC, Color.UNDERLINE, Color.END # Terminal text format.
-g, y, r, w = Color.GREEN, Color.YELLOW, Color.RED, Color.WHITE # Terminal color format.
+import time
+import keyboard
+import pyperclip
+from utilities import *
 
 def locate_directory():
     """FUNCTION locate_directory() is a one-time use function. Finds the locally saved credentials folder (dir)."""
@@ -37,13 +37,59 @@ def display_files(directory):
     return directory, credentialsArray, directoryLen
 
 def read_files(userInputFileName, directory):
-    """Displays the content of the file matching userInputFileName."""
+    """FUNCTION read_files() displays the content of the file matching userInputFileName."""
     credentialsArray, _ = refresh_files(directory)  # Updates credentialsArray
     if not userInputFileName.strip():  # Ensures the userInput[1] isn't empty.
-        raise FileNotFoundError
+        raise IndexError
+    if len(userInputFileName) > 1 and '.txt' not in userInputFileName:  # Add ".txt" if not present for search.
+        userInputFileName += '.txt'
     for filePath in credentialsArray:
         if os.path.basename(filePath) == userInputFileName:  # Exact match
             with open(filePath, encoding='utf-8') as f:
                 print(f'\n{w}{b}{u}{userInputFileName}{e}\n{f.read()}') # Prints file name on top and file content(s).
                 return # Leaves the loop if condition is met (on top).
     raise FileNotFoundError  # If no file matches
+
+def scan_function(userInput, currentFile, directory):
+    matches = None
+    actions = { # Dictionary for actions depending on input.
+        "app": lambda: copy_to_clipboard(matches[0], "app"),
+        "user": lambda: copy_to_clipboard(matches[1], "email"),
+        "email": lambda: copy_to_clipboard(matches[1], "email"),
+        "pass": lambda: copy_to_clipboard(matches[2], "password")
+    }
+    with open(currentFile, 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+        for i in range(0, len(lines), 4): # From the start of the file to the end of the file, skipping 4 lines...
+            app = lines[i].strip()
+            email = lines[i+1][2:].strip()
+            password = lines[i+2][2:].strip()
+            if app.startswith(userInput[1]):
+                matches = (app, email, password)
+                break  # Exit if match is found.
+            if not matches and userInput[1] in app:
+                matches = (app, email, password)  # Stores 'closest' match (if substring is found).
+    if not (len(userInput) > 2 and userInput[2] in actions or len(userInput) == 2): # Next two checks cover errors.
+        print(f'{r}{b}>> ERROR: {e}{r}Invalid argument "{i}{userInput[2]}'
+              f'{e}{r}"! Use "user", "pass", "app", or leave blank.{e}')
+        return
+    if not matches:
+        print(f'{r}>> {b}ERROR: {e}{i}{r}'
+              f'Could not find the main title called: "{userInput[1]}".{e}')
+        return
+    if len(userInput) > 2 and userInput[2] in actions: # Handles user input ("email", "password", "app", etc.)
+        actions[userInput[2]]()
+    elif len(userInput) == 2:
+        copy_to_clipboard(matches[1], "email")
+        detect_ctrl_v()
+        time.sleep(0.02)
+        copy_to_clipboard(matches[2], "password")
+
+def detect_ctrl_v():
+    while True:
+        if keyboard.is_pressed('ctrl') and keyboard.is_pressed('v'):
+            return True
+
+def copy_to_clipboard(value, label):
+    pyperclip.copy(value)
+    print(f'Copied {label}: "{value}" to clipboard!')
