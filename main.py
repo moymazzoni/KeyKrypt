@@ -12,7 +12,7 @@ def main():
             gui.gui()
             return
         elif userInput.lower() in ['terminal', 'term']:
-            print(f'{w}{b}>> Entering... {i}Terminal Mode{e}{w}.{e}')
+            print(f'{y}{b}>> Entering... {i}Terminal Mode{e}{y}.{e}')
             directory = locate_directory() # Looks for 'default' dir location.
             credentialsArray, directoryLen = refresh_files(directory)
             display_files(directory) # Lists file options.

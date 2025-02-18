@@ -25,6 +25,7 @@ def display_files(directory):
     or not. It will also print what items it is referring to"""
     credentialsArray, directoryLen = refresh_files(directory) # Double-checks if the credentials folder has been tampered with or not.
     credentialsValid = 0
+    print(f'{w}{b}>> {u}Directory list page:{e}')
     for fileName in os.listdir(directory):
         f = os.path.join(directory, fileName)
         if os.path.isfile(f) and f.endswith('.txt'):
@@ -36,12 +37,13 @@ def display_files(directory):
     return directory, credentialsArray, directoryLen
 
 def read_files(userInputFileName, directory):
-    """FUNCTION read_files() displays the content(s) of the file that was input (arg #1)"""
-    credentialsArray, _ = refresh_files(directory) # Updates credentialsArray to ensure it's up-to-date.
-    for item in range(len(credentialsArray)):
-        if credentialsArray[item].endswith(userInputFileName):
-            with open(credentialsArray[item], encoding='utf-8') as f:
+    """Displays the content of the file matching userInputFileName."""
+    credentialsArray, _ = refresh_files(directory)  # Updates credentialsArray
+    if not userInputFileName.strip():  # Ensures the userInput[1] isn't empty.
+        raise FileNotFoundError
+    for filePath in credentialsArray:
+        if os.path.basename(filePath) == userInputFileName:  # Exact match
+            with open(filePath, encoding='utf-8') as f:
                 print(f'\n{w}{b}{u}{userInputFileName}{e}\n{f.read()}') # Prints file name on top and file content(s).
                 return # Leaves the loop if condition is met (on top).
-        continue
-    raise FileNotFoundError # If no file is found.
+    raise FileNotFoundError  # If no file matches

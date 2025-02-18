@@ -11,7 +11,7 @@ def error_catcher(x, *args):
             print(f'{b}{r}>> ERROR: {e}{i}{r}Not a valid command!{e}')
             return
         case 1: # General file was not found.
-            print(f'{b}{r}>> ERROR: {e}{i}{r}File {args} was not found!{e}')
+            print(f'{b}{r}>> ERROR: {e}{i}{r}File "{args[0]}" was not found!{e}')
             return
         case 2: # Generic not a full valid command, too little args.
             print(f'{b}{r}>> ERROR: {e}{i}{r}Not a full command, too little arguments.{e}'

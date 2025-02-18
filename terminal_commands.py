@@ -7,7 +7,7 @@ g, y, r, w = Color.GREEN, Color.YELLOW, Color.RED, Color.WHITE # Terminal color 
 class GlobalCommands: # Hosts all commands.
     def __init__(self):
         self.commands = {
-            '-help': self.help_file_command,
+            '-help': self.help_command,
             '-h': self.help_command,
             '-list': self.list_command,
             '-l': self.list_command,
@@ -19,22 +19,27 @@ class GlobalCommands: # Hosts all commands.
             '-r': self.read_command
         }
     def process_command(self, userInput, directory):
-        userInput = userInput.split()
+        userInput = userInput.split(' ') # Considers anything with a space as another arg.
         print(userInput)
         try:
             action = self.commands.get(userInput[0], lambda: error_handler.error_catcher(2))
+            if len(userInput) > 1 and '.txt' not in userInput[1]: # If file name doesn't have ".txt" at the end, add it for search.
+                userInput[1] += '.txt'
             action(userInput, directory)
         except (TypeError, IndexError): # Catches empty inputs or invalid ones (not a command).
             error_handler.error_catcher(0)
 
     @staticmethod
-    def list_command(_, directory):
-        display_files(directory)
-        return
+    def list_command(userInput, directory):
+        if len(userInput) > 1:
+            return error_handler.error_catcher(3)
+        return display_files(directory)
 
     @staticmethod
-    def help_command(*args):
-        print(f'{Color.BOLD}{Color.UNDERLINE}Selection Help page:{Color.END}'
+    def help_command(userInput, _):
+        if len(userInput) > 1:
+            return error_handler.error_catcher(3)
+        print(f'{w}{b}>> {u}Selection Help page:{e}'
               f'\n╭ [1] -help -> brings up a list of commands.'
               f'\n| [2] -list -> lists all files in directory.'
               f'\n| [3] -exit -> exit the program entirely.'
@@ -43,7 +48,7 @@ class GlobalCommands: # Hosts all commands.
 
     @staticmethod
     def help_file_command(*args):
-         print(f'{Color.BOLD}{Color.UNDERLINE}File Help page:{Color.END}'
+         print(f'{w}{b}>> {u}File Help page:{e}'
               f'\n╭ [1] -help -> brings up a list of commands.'
               f'\n| [2] -list -> lists all files in directory.'
               f'\n| [3] -exit -> exit the current subsection.'
@@ -52,22 +57,22 @@ class GlobalCommands: # Hosts all commands.
               f'\n╰ [5] -read -> re-read the current file.')
 
     @staticmethod
-    def exit_command():
-        print('Hi from exit_command!')
-        return
+    def exit_command(userInput, _):
+        if len(userInput) > 1:
+            return error_handler.error_catcher(3)
+        return print('Hi from exit_command!')
 
     @staticmethod
     def read_command(userInput, directory):
-        if len(userInput) > 2:
+        print(len(userInput))
+        if len(userInput) >= 3:
             return error_handler.error_catcher(3)
         try:
             read_files(userInput[1], directory)
         except IndexError:
-            error_handler.error_catcher(2)
-            return
+            return error_handler.error_catcher(2)
         except FileNotFoundError:
-            error_handler.error_catcher(1, userInput[1])  # If file is not found.
-            return
+            return error_handler.error_catcher(1, userInput[1])  # If file is not found.
 
     @staticmethod
     def copy_command(userInput, directory):
