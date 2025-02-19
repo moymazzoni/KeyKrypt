@@ -60,10 +60,10 @@ def scan_function(userInput, currentFile, directory):
     }
     with open(currentFile, 'r', encoding='utf-8') as f:
         lines = f.readlines()
-        for i in range(0, len(lines), 4): # From the start of the file to the end of the file, skipping 4 lines...
-            app = lines[i].strip()
-            email = lines[i+1][2:].strip()
-            password = lines[i+2][2:].strip()
+        for j in range(0, len(lines), 4): # From the start of the file to the end of the file, skipping 4 lines...
+            app = lines[j].strip()
+            email = lines[j+1][2:].strip()
+            password = lines[j+2][2:].strip()
             if app.startswith(userInput[1]):
                 matches = (app, email, password)
                 break  # Exit if match is found.

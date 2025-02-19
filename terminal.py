@@ -10,3 +10,9 @@ def terminal(directory):
         if cmd is True:
             print(f'{y}{b}>> Exiting program...{e}')
             break
+        terminal_2(userInput, directory, commands)
+
+"""FUNCTION terminal was so good that we just had to make a sequel."""
+def terminal_2(userInput, directory, commands):
+    userInput = input(f'{w}{b}>> [L2]{e}{w} - Enter a command:\n  {u}>{e} ')
+    print(userInput)

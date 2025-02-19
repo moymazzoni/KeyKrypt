@@ -81,6 +81,6 @@ class GlobalCommands: # Hosts all commands.
             # cmd_2, app_name, user_pass_or_app = locate_data()
             scan_function(userInput, test_file, directory)
         except IndexError:
-            print(f'{Color.RED}{Color.BOLD}>> ERROR: {Color.END}{Color.RED}Command isn\'t valid, no passed arguments.'
-                  f'\n     ↪ Type "-help" for commands!{Color.END}')
+            print(f'{r}{b}>> ERROR: {e}{r}Command isn\'t valid, no passed arguments.'
+                  f'\n     ↪ Type "-help" for commands!{e}')
             return
