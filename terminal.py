@@ -8,14 +8,19 @@ def terminal(directory):
     currentFile = None
     while True:
         userInput = input(f'{w}{b}>> [L1]{e}{w} - Enter a command:\n  {u}>{e} ')
-        cmd = commands.process_command(userInput, directory, key, currentFile) # Sending full userInput into process_command().
+        cmd = commands.process_command(userInput, directory, key, currentFile)
         if cmd == 'exit':
             print(f'{y}{b}>> Exiting program...{e}')
             break
         if cmd == 'read':
             print(f'{y}{b}>> Entering... {i}file commands.{e}')
-            currentFile = userInput[3:len(userInput)]
+            userInput_parts = list(filter(None, userInput.split(' ')))
+            if len(userInput_parts) > 1:
+                currentFile = userInput_parts[1]
+            else:
+                currentFile = None
             terminal_2(currentFile, directory, commands)
+
 
 """FUNCTION terminal was so good that we just had to make a sequel."""
 def terminal_2(currentFile, directory, commands):

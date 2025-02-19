@@ -70,8 +70,6 @@ class GlobalCommands: # Hosts all commands.
         if terminalKey == 'terminal_2':
             if len(userInput) >= 2:
                 return error_handler.error_catcher(3)
-            print(userInput)
-            print(directory)
             read_files(currentFile, directory)
             print(f'>> {w}{b}^^ Re-read document ^^{e}')
             return
