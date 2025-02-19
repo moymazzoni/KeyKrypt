@@ -19,68 +19,82 @@ class GlobalCommands: # Hosts all commands.
         }
 
     """FUNCTION process_command() is where the userInput goes in and gets sent to the appropriate function."""
-    def process_command(self, userInput, directory):
+    def process_command(self, userInput, directory, terminalKey, currentFile):
         userInput = list(filter(None, userInput.split(' ')))  # Chops up the text so only words are passed as args.
         try:
-            action = self.commands.get(userInput[0], lambda: error_handler.error_catcher(2))
-            isExit = action(userInput, directory) # Track result of correlating command.
-            if isExit is True:  # If exit command was input, exit.
-                return True
+            action = self.commands.get(userInput[0], lambda *_: error_handler.error_catcher(0))
+            isExit = action(userInput, directory, terminalKey, currentFile)  # Pass terminalKey dynamically
+            if isExit == 'exit':  # If exit command was input, exit.
+                return 'exit'
+            if isExit == 'read':
+                return 'read'
         except (TypeError, IndexError):  # Catches empty inputs or invalid ones
             error_handler.error_catcher(0)
-        return False
+        return
 
     @staticmethod
-    def list_command(userInput, directory):
+    def list_command(userInput, directory, *args):
         if len(userInput) > 1:
             return error_handler.error_catcher(3)
         return display_files(directory)
 
     @staticmethod
-    def help_command(userInput, _):
+    def help_command(userInput, _, terminalKey, *args):
         if len(userInput) > 1:
             return error_handler.error_catcher(3)
-        print(f'{w}{b}>> {u}Selection Help page:{e}'
-              f'\n╭ [1] -help -> brings up a list of commands.'
-              f'\n| [2] -list -> lists all files in directory.'
-              f'\n| [3] -exit -> exit the program entirely.'
-              f'\n╰ [4] -read -> re-read the current file.')
-        return
+        if terminalKey == 'terminal_2':
+            print(f'{w}{b}>> {u}File Help page:{e}'
+                  f'\n╭ [1] -help -> brings up a list of commands.'
+                  f'\n| [2] -list -> lists all files in directory.'
+                  f'\n| [3] -exit -> exit the current subsection.'
+                  f'\n| [4] -copy -> alone, copies email & password. Chained with "user", "pass", or "app" for respective copies.'
+                  f'\n|  ↪   ex: -copy app_name, -copy app_name user, -copy app_name pass, -copy app_name app'
+                  f'\n╰ [5] -read -> re-read the current file.')
+            return
+        else:
+            print(f'{w}{b}>> {u}Selection Help page:{e}'
+                  f'\n╭ [1] -help -> brings up a list of commands.'
+                  f'\n| [2] -list -> lists all files in directory.'
+                  f'\n| [3] -exit -> exit the program entirely.'
+                  f'\n╰ [4] -read -> re-read the current file.')
+            return
 
     @staticmethod
-    def help_file_command(*args):
-         print(f'{w}{b}>> {u}File Help page:{e}'
-              f'\n╭ [1] -help -> brings up a list of commands.'
-              f'\n| [2] -list -> lists all files in directory.'
-              f'\n| [3] -exit -> exit the current subsection.'
-              f'\n| [4] -copy -> alone, copies email & password. Chained with "user", "pass", or "app" for respective copies.'
-              f'\n|  ↪   ex: -copy app_name, -copy app_name user, -copy app_name pass, -copy app_name app'
-              f'\n╰ [5] -read -> re-read the current file.')
-
-    @staticmethod
-    def exit_command(userInput, _):
+    def exit_command(userInput, *args):
         if len(userInput) > 1:
             return error_handler.error_catcher(3)
-        return True
+        return 'exit'
 
     @staticmethod
-    def read_command(userInput, directory):
+    def read_command(userInput, directory, terminalKey, currentFile):
+        if terminalKey == 'terminal_2':
+            if len(userInput) >= 2:
+                return error_handler.error_catcher(3)
+            print(userInput)
+            print(directory)
+            read_files(currentFile, directory)
+            print(f'>> {w}{b}^^ Re-read document ^^{e}')
+            return
         if len(userInput) >= 3:
             return error_handler.error_catcher(3)
         try:
             read_files(userInput[1], directory)
+            return 'read'
         except IndexError:
             return error_handler.error_catcher(2)
         except FileNotFoundError:
             return error_handler.error_catcher(1, userInput[1])  # If file is not found.
 
     @staticmethod
-    def copy_command(userInput, directory):
-        test_file = 'C:\\Users\\Modesto\\Downloads\\KeyKrypt - v2.0\\Credentials\\OW_test.txt'
-        try:
-            # cmd_2, app_name, user_pass_or_app = locate_data()
-            scan_function(userInput, test_file, directory)
-        except IndexError:
-            print(f'{r}{b}>> ERROR: {e}{r}Command isn\'t valid, no passed arguments.'
-                  f'\n     ↪ Type "-help" for commands!{e}')
+    def copy_command(userInput, directory, terminalKey, currentFile):
+        if terminalKey == 'terminal':
+            error_handler.error_catcher(0)
             return
+        else:
+            try:
+                # cmd_2, app_name, user_pass_or_app = locate_data()
+                scan_function(userInput, currentFile, directory)
+            except IndexError:
+                print(f'{r}{b}>> ERROR: {e}{r}Command isn\'t valid, no passed arguments.'
+                      f'\n     ↪ Type "-help" for commands!{e}')
+                return

@@ -3,6 +3,7 @@ import os
 import time
 import keyboard
 import pyperclip
+import error_handler
 from utilities import *
 
 def locate_directory():
@@ -51,6 +52,8 @@ def read_files(userInputFileName, directory):
     raise FileNotFoundError  # If no file matches
 
 def scan_function(userInput, currentFile, directory):
+    if '.txt' not in currentFile:  # Add ".txt" if not present for search.
+        currentFile += '.txt'
     matches = None
     actions = { # Dictionary for actions depending on input.
         "app": lambda: copy_to_clipboard(matches[0], "app"),
@@ -58,7 +61,7 @@ def scan_function(userInput, currentFile, directory):
         "email": lambda: copy_to_clipboard(matches[1], "email"),
         "pass": lambda: copy_to_clipboard(matches[2], "password")
     }
-    with open(currentFile, 'r', encoding='utf-8') as f:
+    with open(f'{directory}\\{currentFile}', 'r', encoding='utf-8') as f:
         lines = f.readlines()
         for j in range(0, len(lines), 4): # From the start of the file to the end of the file, skipping 4 lines...
             app = lines[j].strip()
@@ -66,17 +69,17 @@ def scan_function(userInput, currentFile, directory):
             password = lines[j+2][2:].strip()
             if app.startswith(userInput[1]):
                 matches = (app, email, password)
-                break  # Exit if match is found.
+                break # Exit if match is found.
             if not matches and userInput[1] in app:
                 matches = (app, email, password)  # Stores 'closest' match (if substring is found).
-    if not (len(userInput) > 2 and userInput[2] in actions or len(userInput) == 2): # Next two checks cover errors.
-        print(f'{r}{b}>> ERROR: {e}{r}Invalid argument "{i}{userInput[2]}'
-              f'{e}{r}"! Use "user", "pass", "app", or leave blank.{e}')
+
+    if not (len(userInput) > 2 and userInput[2] in actions or len(userInput) == 2):
+        error_handler.error_catcher(4, userInput[2])
         return
     if not matches:
-        print(f'{r}>> {b}ERROR: {e}{i}{r}'
-              f'Could not find the main title called: "{userInput[1]}".{e}')
+        error_handler.error_catcher(5, userInput[1])
         return
+
     if len(userInput) > 2 and userInput[2] in actions: # Handles user input ("email", "password", "app", etc.)
         actions[userInput[2]]()
     elif len(userInput) == 2:
