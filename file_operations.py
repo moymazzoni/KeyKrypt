@@ -52,8 +52,11 @@ def read_files(userInputFileName, directory):
     raise FileNotFoundError  # If no file matches
 
 def scan_function(userInput, currentFile, directory):
+    credentialsArray, _ = refresh_files(directory)
     if '.txt' not in currentFile:  # Add ".txt" if not present for search.
         currentFile += '.txt'
+    if f'{directory}\\{currentFile}' not in credentialsArray:
+        raise FileNotFoundError
     matches = None
     actions = { # Dictionary for actions depending on input.
         "app": lambda: copy_to_clipboard(matches[0], "app"),
@@ -71,14 +74,12 @@ def scan_function(userInput, currentFile, directory):
                 matches = (app, email, password)
                 break # Exit if match is found.
             if not matches and userInput[1] in app:
-                matches = (app, email, password)  # Stores 'closest' match (if substring is found).
+                 matches = (app, email, password)  # Stores 'closest' match (if substring is found).
 
     if not (len(userInput) > 2 and userInput[2] in actions or len(userInput) == 2):
-        error_handler.error_catcher(4, userInput[2])
-        return
+        return error_handler.error_catcher(4, userInput[2])
     if not matches:
-        error_handler.error_catcher(5, userInput[1])
-        return
+        return error_handler.error_catcher(5, userInput[1])
 
     if len(userInput) > 2 and userInput[2] in actions: # Handles user input ("email", "password", "app", etc.)
         actions[userInput[2]]()

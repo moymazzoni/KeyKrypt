@@ -29,5 +29,5 @@ def terminal_2(currentFile, directory, commands):
         userInput2 = input(f'{w}{b}>> [L2]{e}{w} - Enter a command:\n  {u}>{e} ')
         cmd2 = commands.process_command(userInput2, directory, key2, currentFile)
         if cmd2 == 'exit':
-            print(f'{y}{b}>> Exiting program...{e}')
+            print(f'{y}{b}>> Exiting... {i}file commands.{e}')
             return

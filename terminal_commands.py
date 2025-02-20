@@ -70,9 +70,12 @@ class GlobalCommands: # Hosts all commands.
         if terminalKey == 'terminal_2':
             if len(userInput) >= 2:
                 return error_handler.error_catcher(3)
-            read_files(currentFile, directory)
-            print(f'>> {w}{b}^^ Re-read document ^^{e}')
-            return
+            try:
+                read_files(currentFile, directory)
+                return print(f'>> {w}{b}^^ Re-read document ^^{e}')
+            except FileNotFoundError:
+                error_handler.error_catcher(7, currentFile)
+                return 'exit'
         if len(userInput) >= 3:
             return error_handler.error_catcher(3)
         try:
@@ -86,13 +89,13 @@ class GlobalCommands: # Hosts all commands.
     @staticmethod
     def copy_command(userInput, directory, terminalKey, currentFile):
         if terminalKey == 'terminal':
-            error_handler.error_catcher(0)
-            return
+            return error_handler.error_catcher(0)
         else:
             try:
                 # cmd_2, app_name, user_pass_or_app = locate_data()
                 scan_function(userInput, currentFile, directory)
             except IndexError:
-                print(f'{r}{b}>> ERROR: {e}{r}Command isn\'t valid, no passed arguments.'
-                      f'\n     ↪ Type "-help" for commands!{e}')
-                return
+                return error_handler.error_catcher(2)
+            except FileNotFoundError:
+                error_handler.error_catcher(6, currentFile)
+                return 'exit'
