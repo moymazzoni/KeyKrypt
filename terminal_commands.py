@@ -2,7 +2,8 @@
 import error_handler
 from file_operations import display_files, read_files, scan_function
 from utilities import *
-"""CLASS GlobalCommands contains all commands in a dictionary and the functions for correlating command."""
+
+"""CLASS GlobalCommands contains all commands in a dictionary and the functions for the correlating command."""
 class GlobalCommands: # Hosts all commands.
     def __init__(self):
         self.commands = {
@@ -23,10 +24,10 @@ class GlobalCommands: # Hosts all commands.
         userInput = list(filter(None, userInput.split(' ')))  # Chops up the text so only words are passed as args.
         try:
             action = self.commands.get(userInput[0], lambda *_: error_handler.error_catcher(0))
-            isExit = action(userInput, directory, terminalKey, currentFile)  # Pass terminalKey dynamically
-            if isExit == 'exit':  # If exit command was input, exit.
+            isAction = action(userInput, directory, terminalKey, currentFile)  # Pass terminalKey dynamically
+            if isAction == 'exit':  # If exit command was input, exit.
                 return 'exit'
-            if isExit == 'read':
+            if isAction == 'read': # If read command was input, read.
                 return 'read'
         except (TypeError, IndexError):  # Catches empty inputs or invalid ones
             error_handler.error_catcher(0)
@@ -34,40 +35,44 @@ class GlobalCommands: # Hosts all commands.
 
     @staticmethod
     def list_command(userInput, directory, *args):
+        _ = args # Unused value but must be passed in function.
         if len(userInput) > 1:
             return error_handler.error_catcher(3)
         return display_files(directory)
 
     @staticmethod
     def help_command(userInput, _, terminalKey, *args):
+        _ = args
         if len(userInput) > 1:
             return error_handler.error_catcher(3)
         if terminalKey == 'terminal_2':
             print(f'{w}{b}>> {u}File Help page:{e}'
                   f'\n╭ [1] -help -> brings up a list of commands.'
                   f'\n| [2] -list -> lists all files in directory.'
-                  f'\n| [3] -exit -> exit the current subsection.'
+                  f'\n| [3] -read -> re-read the current file.'
                   f'\n| [4] -copy -> alone, copies email & password. Chained with "user", "pass", or "app" for respective copies.'
-                  f'\n|  ↪   ex: -copy app_name, -copy app_name user, -copy app_name pass, -copy app_name app'
-                  f'\n╰ [5] -read -> re-read the current file.')
+                  f'\n|  ↪   ex: "-copy app_name", "-copy app_name user", "-copy app_name pass", "-copy app_name app".'
+                  f'\n╰ [5] -exit -> exit the current subsection.')
             return
         else:
             print(f'{w}{b}>> {u}Selection Help page:{e}'
                   f'\n╭ [1] -help -> brings up a list of commands.'
                   f'\n| [2] -list -> lists all files in directory.'
-                  f'\n| [3] -exit -> exit the program entirely.'
-                  f'\n╰ [4] -read -> re-read the current file.')
+                  f'\n| [3] -read -> prints content(s) of file. Chained with file name as argument.'
+                  f'\n|  ↪   ex: "-read personalAccounts_file", "-r emailAccounts".'
+                  f'\n╰ [4] -exit -> exit the program entirely.')
             return
 
     @staticmethod
     def exit_command(userInput, *args):
+        _ = args
         if len(userInput) > 1:
             return error_handler.error_catcher(3)
         return 'exit'
 
     @staticmethod
     def read_command(userInput, directory, terminalKey, currentFile):
-        if terminalKey == 'terminal_2':
+        if terminalKey == 'terminal_2': # In terminal_2
             if len(userInput) >= 2:
                 return error_handler.error_catcher(3)
             try:
@@ -76,7 +81,7 @@ class GlobalCommands: # Hosts all commands.
             except FileNotFoundError:
                 error_handler.error_catcher(7, currentFile)
                 return 'exit'
-        if len(userInput) >= 3:
+        if len(userInput) >= 3: # In terminal (1)
             return error_handler.error_catcher(3)
         try:
             read_files(userInput[1], directory)

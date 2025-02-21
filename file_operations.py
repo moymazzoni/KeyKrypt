@@ -52,6 +52,8 @@ def read_files(userInputFileName, directory):
     raise FileNotFoundError  # If no file matches
 
 def scan_function(userInput, currentFile, directory):
+    """FUNCTION scan_function() allows the user to copy whichever information they'd like such as app name,
+    username, password, etc."""
     credentialsArray, _ = refresh_files(directory)
     if '.txt' not in currentFile:  # Add ".txt" if not present for search.
         currentFile += '.txt'

@@ -13,7 +13,7 @@ def terminal(directory):
             print(f'{y}{b}>> Exiting program...{e}')
             break
         if cmd == 'read':
-            print(f'{y}{b}>> Entering... {i}file commands.{e}')
+            print(f'{y}{b}>> Entered... {i}file commands.{e}')
             userInput_parts = list(filter(None, userInput.split(' ')))
             if len(userInput_parts) > 1:
                 currentFile = userInput_parts[1]
@@ -26,7 +26,7 @@ def terminal(directory):
 def terminal_2(currentFile, directory, commands):
     key2 = 'terminal_2'
     while True:
-        userInput2 = input(f'{w}{b}>> [L2]{e}{w} - Enter a command:\n  {u}>{e} ')
+        userInput2 = input(f'{w}{b}>> [L2]{e}{w} - Enter a command (in "{currentFile}"):\n  {u}>{e} ')
         cmd2 = commands.process_command(userInput2, directory, key2, currentFile)
         if cmd2 == 'exit':
             print(f'{y}{b}>> Exiting... {i}file commands.{e}')
