@@ -72,7 +72,7 @@ class GlobalCommands: # Hosts all commands.
                 return error_handler.error_catcher(3)
             try:
                 read_files(currentFile, directory)
-                return print(f'>> {w}{b}^^ Re-read document ^^{e}')
+                return print(f'{w}{b}>> ^^ Re-read document ^^{e}')
             except FileNotFoundError:
                 error_handler.error_catcher(7, currentFile)
                 return 'exit'
