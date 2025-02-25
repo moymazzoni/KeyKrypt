@@ -28,12 +28,22 @@ def display_files(directory):
     credentialsValid = 0
     print(f'{w}{b}>> {u}Directory list page:{e}')
     for fileName in os.listdir(directory):
+        spacingLen = 48 # Global within this scope (so valid and invalid can use it).
+        spacingDiv = spacingLen-3 # For dividing up the text with the string slicing below.
         f = os.path.join(directory, fileName)
         if os.path.isfile(f) and f.endswith('.txt'):
-            print(f'{g}{b}[✔] | {e}"{fileName}" - {b}Valid!{e}')
+            if len(fileName) >= spacingLen: # Includes ".txt" file extension.
+                fileName = fileName[0:spacingDiv]
+                fileName = fileName[:-4] + "..."
+                fileName = fileName + ".txt"
+            print(f'{g}{b}[✔] | {e}"{fileName}"{abs((len(fileName)-spacingLen))*"."} - {b}Valid!{e}')
             credentialsValid += 1
         else:
-            print(f'{r}{b}[✖] | {e}"{fileName}" - {b}ISN\'T Valid!{e}')
+            if len(fileName) >= spacingLen: # Includes ".txt" file extension.
+                fileName = fileName[0:spacingDiv]
+                fileName = fileName[:-4] + "..."
+                fileName = fileName + ".txt"
+            print(f'{r}{b}[✖] | {e}"{fileName}"{abs((len(fileName)-spacingLen))*"."} - {b}NOT Valid!{e}')
     print(f'Total files present: {directoryLen} | Text files present: {credentialsValid}')
     return directory, credentialsArray, directoryLen
 
@@ -92,10 +102,12 @@ def scan_function(userInput, currentFile, directory):
         copy_to_clipboard(matches[2], "password")
 
 def detect_ctrl_v():
+    """FUNCTION detect_ctrl_v() uses the imported keyboard to detect if "Ctr+V" (paste) was input. It returns True."""
     while True:
         if keyboard.is_pressed('ctrl') and keyboard.is_pressed('v'):
             return True
 
 def copy_to_clipboard(value, label):
+    """FUNCTION copy_to_clipboard() informs the user of what is being copied to their clipboard."""
     pyperclip.copy(value)
     print(f'Copied {label}: "{value}" to clipboard!')
