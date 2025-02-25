@@ -3,8 +3,8 @@ import error_handler
 from file_operations import display_files, read_files, scan_function
 from utilities import *
 
-"""CLASS GlobalCommands contains all commands in a dictionary and the functions for the correlating command."""
 class GlobalCommands: # Hosts all commands.
+    """CLASS GlobalCommands contains all commands in a dictionary and the functions for the correlating command."""
     def __init__(self):
         self.commands = {
             '-help': self.help_command,
@@ -19,8 +19,8 @@ class GlobalCommands: # Hosts all commands.
             '-r': self.read_command
         }
 
-    """FUNCTION process_command() is where the userInput goes in and gets sent to the appropriate function."""
     def process_command(self, userInput, directory, terminalKey, currentFile):
+        """FUNCTION process_command() is where the userInput goes in and gets sent to the appropriate function."""
         userInput = list(filter(None, userInput.split(' ')))  # Chops up the text so only words are passed as args.
         try:
             action = self.commands.get(userInput[0], lambda *_: error_handler.error_catcher(0))
