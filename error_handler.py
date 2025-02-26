@@ -29,3 +29,6 @@ def error_catcher(x, *args):
             print(f'{b}{r}>> ERROR: {e}{i}{r}'
                   f'File "{args[0]}" is no longer present, exiting read mode.{e}'
                   f'{r}\n     ↪ File may have been deleted in directory!{e}')
+        case 8: # Cannot open file, does not meet the credentials.
+            print(f'{b}{r}>> ERROR: {e}{i}{r}'
+                  f'File is not formatted properly! Cannot read the file.{e}')

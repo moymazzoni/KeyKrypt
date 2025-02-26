@@ -84,8 +84,11 @@ class GlobalCommands: # Hosts all commands.
         if len(userInput) >= 3: # In terminal (1)
             return error_handler.error_catcher(3)
         try:
-            read_files(userInput[1], directory)
-            return 'read'
+            result = read_files(userInput[1], directory)
+            if result == 'invalid':
+                return
+            else:
+                return 'read'
         except IndexError:
             return error_handler.error_catcher(2)
         except FileNotFoundError:

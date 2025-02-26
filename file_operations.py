@@ -28,11 +28,12 @@ def display_files(directory):
     credentialsValid = 0
     print(f'{w}{b}>> {u}Directory list page:{e}')
     for fileName in os.listdir(directory):
+        result = verify_files(directory, fileName)
         spacingLen = 48 # Global within this scope (so valid and invalid can use it).
         spacingDiv = spacingLen-3 # For dividing up the text with the string slicing below.
         f = os.path.join(directory, fileName)
-        if os.path.isfile(f) and f.endswith('.txt'):
-            if len(fileName) >= spacingLen: # Includes ".txt" file extension.
+        if os.path.isfile(f) and f.endswith('.txt') and result != 'invalid':
+            if len(fileName) > spacingLen: # Includes ".txt" file extension.
                 fileName = fileName[0:spacingDiv]
                 fileName = fileName[:-4] + "..." + ".txt"
             print(f'{g}{b}[✔] | {e}"{fileName}"{abs((len(fileName)-spacingLen))*"."} - {b}Valid!{e}')
@@ -99,9 +100,14 @@ def scan_function(userInput, currentFile, directory):
         time.sleep(0.02)
         copy_to_clipboard(matches[2], "password")
 
-def verify_files():
-    """FUNCTION verify_files() ensures that the file that is about to be opened can be properly copied."""
-
+def verify_files(directory, userInputFileName):
+    #! Add more file tests to see if valid or not.
+    with open(f"{directory}\\{userInputFileName}", "rb") as f:
+        num_lines = sum(1 for _ in f)  # Gets line count of requested file (userInputFileName).
+        if num_lines % 2 == 1:
+            pass # Continues function.
+        else:
+            return 'invalid' # Leaves function.
 
 def detect_ctrl_v():
     """FUNCTION detect_ctrl_v() uses the imported keyboard to detect if "Ctr+V" (paste) was input. It returns True."""
