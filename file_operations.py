@@ -34,17 +34,15 @@ def display_files(directory):
         if os.path.isfile(f) and f.endswith('.txt'):
             if len(fileName) >= spacingLen: # Includes ".txt" file extension.
                 fileName = fileName[0:spacingDiv]
-                fileName = fileName[:-4] + "..."
-                fileName = fileName + ".txt"
+                fileName = fileName[:-4] + "..." + ".txt"
             print(f'{g}{b}[✔] | {e}"{fileName}"{abs((len(fileName)-spacingLen))*"."} - {b}Valid!{e}')
             credentialsValid += 1
         else:
             if len(fileName) >= spacingLen: # Includes ".txt" file extension.
                 fileName = fileName[0:spacingDiv]
-                fileName = fileName[:-4] + "..."
-                fileName = fileName + ".txt"
+                fileName = fileName[:-4] + "..." + ".txt"
             print(f'{r}{b}[✖] | {e}"{fileName}"{abs((len(fileName)-spacingLen))*"."} - {b}NOT Valid!{e}')
-    print(f'Total files present: {directoryLen} | Text files present: {credentialsValid}')
+    print(f'{w}{b}Total files present: {directoryLen} | Text files present: {credentialsValid}{e}')
     return directory, credentialsArray, directoryLen
 
 def read_files(userInputFileName, directory):
@@ -100,6 +98,10 @@ def scan_function(userInput, currentFile, directory):
         detect_ctrl_v()
         time.sleep(0.02)
         copy_to_clipboard(matches[2], "password")
+
+def verify_files():
+    """FUNCTION verify_files() ensures that the file that is about to be opened can be properly copied."""
+
 
 def detect_ctrl_v():
     """FUNCTION detect_ctrl_v() uses the imported keyboard to detect if "Ctr+V" (paste) was input. It returns True."""
