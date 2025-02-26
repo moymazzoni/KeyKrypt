@@ -39,7 +39,7 @@ def display_files(directory):
             print(f'{g}{b}[✔] | {e}"{fileName}"{abs((len(fileName)-spacingLen))*"."} - {b}Valid!{e}')
             credentialsValid += 1
         else:
-            if len(fileName) >= spacingLen: # Includes ".txt" file extension.
+            if len(fileName) > spacingLen: # Includes ".txt" file extension.
                 fileName = fileName[0:spacingDiv]
                 fileName = fileName[:-4] + "..." + ".txt"
             print(f'{r}{b}[✖] | {e}"{fileName}"{abs((len(fileName)-spacingLen))*"."} - {b}NOT Valid!{e}')
@@ -79,8 +79,8 @@ def scan_function(userInput, currentFile, directory):
         lines = f.readlines()
         for j in range(0, len(lines), 4): # From the start of the file to the end of the file, skipping 4 lines...
             app = lines[j].strip()
-            email = lines[j+1][2:].strip()
-            password = lines[j+2][2:].strip()
+            email = lines[j+1].removeprefix("- ").replace("\n", "")
+            password = lines[j+2].removeprefix("- ").replace("\n", "")
             if app.startswith(userInput[1]):
                 matches = (app, email, password)
                 break # Exit if match is found.
