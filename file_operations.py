@@ -43,7 +43,7 @@ def display_files(directory):
                 fileName = fileName[0:spacingDiv]
                 fileName = fileName[:-4] + "..." + ".txt"
             print(f'{r}{b}[✖] | {e}"{fileName}"{abs((len(fileName)-spacingLen))*"."} - {b}NOT Valid!{e}')
-    print(f'{w}{b}Total files present: {directoryLen} | Text files present: {credentialsValid}{e}')
+    print(f'{w}{b}Total files present: {directoryLen} | Valid text files present: {credentialsValid}{e}')
     return directory, credentialsArray, directoryLen
 
 def read_files(userInputFileName, directory):
@@ -79,8 +79,8 @@ def scan_function(userInput, currentFile, directory):
         lines = f.readlines()
         for j in range(0, len(lines), 4): # From the start of the file to the end of the file, skipping 4 lines...
             app = lines[j].strip()
-            email = lines[j+1].removeprefix("- ").replace("\n", "")
-            password = lines[j+2].removeprefix("- ").replace("\n", "")
+            email = lines[j+1].removeprefix("|- ").replace("\n", "")
+            password = lines[j+2].removeprefix("|- ").replace("\n", "")
             if app.startswith(userInput[1]):
                 matches = (app, email, password)
                 break # Exit if match is found.
@@ -103,11 +103,29 @@ def scan_function(userInput, currentFile, directory):
 def verify_files(directory, userInputFileName):
     #! Add more file tests to see if valid or not.
     with open(f"{directory}\\{userInputFileName}", "rb") as f:
+        # Test 1
         num_lines = sum(1 for _ in f)  # Gets line count of requested file (userInputFileName).
         if num_lines % 2 == 1:
             pass # Continues function.
         else:
             return 'invalid' # Leaves function.
+        f.close()
+        # Test 2
+        try:
+            with open(f'{directory}\\{userInputFileName}', 'r', encoding='utf-8') as fi:
+                lines = fi.readlines()
+                for j in range(0, len(lines), 4):
+                    if lines[j+1].startswith("\n") or lines[j+1].startswith(" "):
+                        return 'invalid'
+                    else:
+                        pass
+                    if lines[j+2].startswith("\n") or lines[j+2].startswith(" "):
+                        return 'invalid'
+                    else:
+                        pass
+        except IndexError:
+            return 'invalid'
+        fi.close()
 
 def detect_ctrl_v():
     """FUNCTION detect_ctrl_v() uses the imported keyboard to detect if "Ctr+V" (paste) was input. It returns True."""
