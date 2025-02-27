@@ -1,6 +1,5 @@
 """MODULE file_operations.py keeps all file operations in safe, working order."""
 import os
-import time
 import keyboard
 import pyperclip
 import error_handler
@@ -73,7 +72,8 @@ def scan_function(userInput, currentFile, directory):
         "app": lambda: copy_to_clipboard(matches[0], "app"),
         "user": lambda: copy_to_clipboard(matches[1], "email"),
         "email": lambda: copy_to_clipboard(matches[1], "email"),
-        "pass": lambda: copy_to_clipboard(matches[2], "password")
+        "pass": lambda: copy_to_clipboard(matches[2], "password"),
+        "all": lambda: copy_all(matches)
     }
     with open(f'{directory}\\{currentFile}', 'r', encoding='utf-8') as f:
         lines = f.readlines()
@@ -95,10 +95,7 @@ def scan_function(userInput, currentFile, directory):
     if len(userInput) > 2 and userInput[2] in actions: # Handles user input ("email", "password", "app", etc.)
         actions[userInput[2]]()
     elif len(userInput) == 2:
-        copy_to_clipboard(matches[1], "email")
-        detect_ctrl_v()
-        time.sleep(0.02)
-        copy_to_clipboard(matches[2], "password")
+        copy_user_pass(matches[1], matches[2])
 
 def verify_files(directory, userInputFileName):
     #! Add more file tests to see if valid or not.
@@ -128,12 +125,27 @@ def verify_files(directory, userInputFileName):
         fi.close()
 
 def detect_ctrl_v():
-    """FUNCTION detect_ctrl_v() uses the imported keyboard to detect if "Ctr+V" (paste) was input. It returns True."""
+    """FUNCTION detect_ctrl_v() uses the imported keyboard to detect if "Ctr+V" (paste) was input."""
+    print(f"{y}{b}>> Press Ctrl+V to paste before continuing...{e}")  # Notify user
     while True:
         if keyboard.is_pressed('ctrl') and keyboard.is_pressed('v'):
-            return True
+            while keyboard.is_pressed('v'):  # Wait until user releases 'V' key
+                pass
+            return  # Continue only after paste.
 
 def copy_to_clipboard(value, label):
     """FUNCTION copy_to_clipboard() informs the user of what is being copied to their clipboard."""
     pyperclip.copy(value)
     print(f'Copied {label}: "{value}" to clipboard!')
+
+def copy_all(matches):
+    copy_to_clipboard(matches[0], "app")
+    detect_ctrl_v()
+    copy_to_clipboard(matches[1], "email")
+    detect_ctrl_v()
+    copy_to_clipboard(matches[2], "password")
+
+def copy_user_pass(firstMatch, secondMatch):
+        copy_to_clipboard(firstMatch, "email")
+        detect_ctrl_v()
+        copy_to_clipboard(secondMatch, "password")
