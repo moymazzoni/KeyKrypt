@@ -52,7 +52,9 @@ class GlobalCommands: # Hosts all commands.
                   f'\n| [3] -read -> re-read the current file.'
                   f'\n| [4] -copy -> alone, copies email & password. Chained with "user", "pass", or "app" for respective copies.'
                   f'\n|  ↪   ex: "-copy app_name", "-copy app_name user", "-copy app_name pass", "-copy app_name app".'
-                  f'\n╰ [5] -exit -> exit the current subsection.')
+                  f'\n| [5] -exit -> exit the current subsection.'
+                  f'\n╰ {r}[!]{e} Invalid files may still be able to be read, but don\'t expect commands to function!'
+                  f'\n   ↪   It is recommended to reformat the file to conform with file standards.')
             return
         else:
             print(f'{w}{b}>> {u}Selection Help page:{e}'
@@ -60,7 +62,9 @@ class GlobalCommands: # Hosts all commands.
                   f'\n| [2] -list -> lists all files in directory.'
                   f'\n| [3] -read -> prints content(s) of file. Chained with file name as argument.'
                   f'\n|  ↪   ex: "-read personalAccounts_file", "-r emailAccounts".'
-                  f'\n╰ [4] -exit -> exit the program entirely.')
+                  f'\n| [4] -exit -> exit the program entirely.'
+                  f'\n╰ {r}[!]{e} Invalid files may still be able to be read, but don\'t expect commands to function!'
+                  f'\n   ↪   It is recommended to reformat the file to conform with file standards.')
             return
 
     @staticmethod
