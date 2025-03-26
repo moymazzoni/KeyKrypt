@@ -126,7 +126,7 @@ def verify_files(directory, userInputFileName):
 
 def detect_ctrl_v():
     """FUNCTION detect_ctrl_v() uses the imported keyboard to detect if "Ctr+V" (paste) was input."""
-    print(f"{y}{b}>> Press Ctrl+V to paste before continuing...{e}")  # Notify user
+    print(f"{y}{b}>> Press Ctrl+v to paste before continuing...{e}")  # Notify user
     while True:
         if keyboard.is_pressed('ctrl') and keyboard.is_pressed('v'):
             while keyboard.is_pressed('v'):  # Wait until user releases 'V' key
