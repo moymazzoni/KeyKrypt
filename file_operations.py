@@ -25,7 +25,7 @@ def display_files(directory):
     or not. It will also print what items it is referring to"""
     credentialsArray, directoryLen = refresh_files(directory) # Double-checks if the credentials folder has been tampered with or not.
     credentialsValid = 0
-    print(f'{w}{b}>> {u}Directory list page:{e}')
+    print(f'{w}{b}>> {u}Directory List Page:{e}')
     for fileName in os.listdir(directory):
         result = verify_files(directory, fileName)
         spacingLen = 48 # Global within this scope (so valid and invalid can use it).
